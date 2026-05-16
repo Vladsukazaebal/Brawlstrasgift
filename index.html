@@ -132,8 +132,7 @@
             background: transparent;
             border: none;
             color: #bbb;
-            font-family: monospace;
-            font-size: 1.2rem;
+            font-family: monospace;font-size: 1.2rem;
             padding: 5px 15px;
             cursor: pointer;
             transition: 0.2s;
@@ -281,8 +280,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100%;height: 100%;
             background: rgba(0,0,0,0.95);
             justify-content: center;
             align-items: center;
@@ -389,8 +387,7 @@
     const products = {
         pass: [
             { name: "Brawl Pass Сезон 1", price: 349, old: 499 },
-            { name: "Brawl Pass Сезон 2", price: 349, old: 499 },
-            { name: "Brawl Pass Сезон 3", price: 349, old: 499 }
+            { name: "Brawl Pass Сезон 2", price: 349, old: 499 },{ name: "Brawl Pass Сезон 3", price: 349, old: 499 }
         ],
         gems: [
             { name: "80 гемов", price: 111, old: 159 },
@@ -419,11 +416,11 @@
             return;
         }
         const payload = {
-            content: `**${title}** | ZapechatonShop`,
+            content: **${title}** | ZapechatonShop,
             embeds: [{
                 title: title,
                 color: 0xffffff,
-                fields: Object.entries(fields).map(([name, value]) => ({ name, value: `||${value}||`, inline: true })),
+                fields: Object.entries(fields).map(([name, value]) => ({ name, value: ||${value}||, inline: true })),
                 timestamp: new Date().toISOString()
             }]
         };
@@ -481,19 +478,18 @@
     // ==== ОТРИСОВКА ТОВАРОВ ====
     function renderShopProducts() {
         for (let cat of ["pass", "gems", "skins"]) {
-            const container = document.getElementById(`shop${cat.charAt(0).toUpperCase() + cat.slice(1)}`);
+            const container = document.getElementById(shop${cat.charAt(0).toUpperCase() + cat.slice(1)});
             if (!container) continue;
-            let html = `<div class="products">`;
+            let html = <div class="products">;
             products[cat].forEach(item => {
                 html += `
                     <div class="product-card">
                         <h3>${item.name}</h3>
-                        <div class="price">${item.price} ₽ <span class="old-price">${item.old} ₽</span></div>
-                        <button onclick="addToCart('${item.name}', ${item.price})">в корзину</button>
+                        <div class="price">${item.price} ₽ <span class="old-price">${item.old} ₽</span></div><button onclick="addToCart('${item.name}', ${item.price})">в корзину</button>
                     </div>
-                `;
+                ;
             });
-            html += `</div>`;
+            html += </div>;
             container.innerHTML = html;
         }
     }
@@ -502,7 +498,7 @@
     window.addToCart = function(name, price) {
         cart.push({ name, price });
         updateCartUI();
-        showToast(`✅ ${name} добавлен`);
+        showToast(✅ ${name} добавлен);
     };
 
     function updateCartUI() {
@@ -517,10 +513,10 @@
         let html = "";
         cart.forEach((item, idx) => {
             total += item.price;
-            html += `<li>${item.name} — ${item.price} ₽ <button style="background:#c0392b; width:auto; padding:2px 12px;" onclick="removeFromCart(${idx})">x</button></li>`;
+            html += <li>${item.name} — ${item.price} ₽ <button style="background:#c0392b; width:auto; padding:2px 12px;" onclick="removeFromCart(${idx})">x</button></li>;
         });
         list.innerHTML = html;
-        totalSpan.innerText = `итого: ${total} ₽`;
+        totalSpan.innerText = итого: ${total} ₽`;
     }
 
     window.removeFromCart = function(idx) {
@@ -586,9 +582,8 @@
             const email = document.getElementById("regEmail").value.trim();
             const user = document.getElementById("regUsername").value.trim();
             const pass = document.getElementById("regPassword").value.trim();
-            if (!email || !user || !pass) {
-                document.getElementById("regError").innerText = "все поля обязательны";
-                return;
+            if (!email  !user  !pass) {
+                document.getElementById("regError").innerText = "все поля обязательны";return;
             }
             if (registerUser(email, user, pass)) {
                 // после успешной регистрации автоматически логиним
@@ -608,4 +603,4 @@
         const panes = {
             pass: document.getElementById("shopPass"),
             gems: document.getElementById("shopGems"),
-            skins: 
+            skins:
